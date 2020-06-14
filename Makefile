@@ -5,13 +5,19 @@ GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
 GOGET=$(GOCMD) get
 
+DOCKER=docker
+DOCKERBUILD=$(DOCKER) build
+DOCKERRM=$(DOCKER) rm
+DOCKERRUN=$(DOCKER) run
+
 BINARY_NAME=portfolio
+PORT_NUMBER=8080
 
 ifeq ($(OS),Windows_NT)
-    detected_OS := Windows
+    DETECTED_OS := Windows
 	BINARY_NAME += .EXE
 else
-    detected_OS := $(shell sh -c 'uname 2>/dev/null || echo Unknown')
+    DETECTED_OS := $(shell sh -c 'uname 2>/dev/null || echo Unknown')
 endif
 
 all: build
@@ -21,11 +27,16 @@ build: *.go
 
 # for testing os version
 os:
-	@echo $(detected_OS)
+	@echo $(DETECTED_OS)
 
 clean:
 	$(GOCLEAN) -i
 	rm $(BINARY_NAME)
+	$(DOCKERRM) --force $(BINARY_NAME)
+
+docker: build
+	$(DOCKERBUILD) -t $(BINARY_NAME) .
+	$(DOCKERRUN) -d -p $(PORT_NUMBER):$(PORT_NUMBER) --name $(BINARY_NAME) --build-arg PORT_NUMBER=$(PORT_NUMBER)
 
 fmt:
 	gofmt -w .

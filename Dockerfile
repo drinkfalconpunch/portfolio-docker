@@ -14,3 +14,14 @@ RUN make
 
 # Run portfolio server
 
+FROM alpine:latest
+
+ARG PORT_NUMBER
+
+WORKDIR /app
+
+COPY --from=build /app /app
+
+EXPOSE 8080
+
+CMD ["./portfolio", ${PORT_NUMBER}]
