@@ -16,7 +16,7 @@ RUN make
 
 FROM alpine:latest
 
-ARG PORT_NUMBER
+ARG PORT_NUMBER=8080
 
 WORKDIR /app
 
