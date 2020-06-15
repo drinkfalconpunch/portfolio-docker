@@ -11,7 +11,7 @@ DOCKERRM=$(DOCKER) rm
 DOCKERRUN=$(DOCKER) run
 
 BINARY_NAME=portfolio
-PORT_NUMBER=8080
+PORT_NUMBER=9000
 
 ifeq ($(OS),Windows_NT)
     DETECTED_OS := Windows
@@ -36,7 +36,7 @@ clean:
 
 docker: build
 	$(DOCKERBUILD) -t $(BINARY_NAME) .
-	$(DOCKERRUN) -d -p $(PORT_NUMBER):$(PORT_NUMBER) --name $(BINARY_NAME) --build-arg PORT_NUMBER=$(PORT_NUMBER)
+	$(DOCKERRUN) -d -p $(PORT_NUMBER):$(PORT_NUMBER) -e "PORT_NUMBER=$(PORT_NUMBER)" $(BINARY_NAME)
 
 fmt:
 	gofmt -w .

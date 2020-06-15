@@ -6,11 +6,11 @@ RUN apk add --no-cache alpine-sdk
 
 WORKDIR /app
 
-RUN git clone https://www.github.com/drinkfalconpunch/portfolio-docker
+RUN git clone https://www.github.com/drinkfalconpunch/portfolio-docker.git
+
+COPY . .
 
 RUN make
-
-#COPY . .
 
 # Run portfolio server
 
@@ -20,8 +20,8 @@ ARG PORT_NUMBER=8080
 
 WORKDIR /app
 
-COPY --from=build /app /app
+COPY --from=build /app .
 
-EXPOSE 8080
+EXPOSE ${PORT_NUMBER}
 
-CMD ["./portfolio", ${PORT_NUMBER}]
+CMD ["sh", "-c", "/app/portfolio ${PORT_NUMBER}"]
